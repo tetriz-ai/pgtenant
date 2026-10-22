@@ -1,0 +1,200 @@
+{
+  "accent": "#20758a",
+  "disclosure": "Local Postgres example \u00b7 application role + FORCE RLS \u00b7 verified tenant supplied by the host",
+  "scenes": [
+    {
+      "title": "One table. Two tenants.",
+      "blocks": [
+        {
+          "label": "TENANT A",
+          "rows": [
+            {
+              "text": "A: renew the domain",
+              "state": "accent"
+            },
+            {
+              "text": "A: send the invoice",
+              "state": "accent"
+            }
+          ],
+          "box": [
+            36,
+            151,
+            488,
+            413
+          ],
+          "kind": "rows"
+        },
+        {
+          "label": "TENANT B",
+          "rows": [
+            "B: book the venue",
+            "B: order the badges"
+          ],
+          "box": [
+            576,
+            151,
+            488,
+            413
+          ],
+          "kind": "rows"
+        }
+      ],
+      "arrows": []
+    },
+    {
+      "title": "The same query, scoped to tenant A.",
+      "blocks": [
+        {
+          "label": "TENANT SCOPE",
+          "rows": [
+            "RunInScope(ctx, tenantA, \u2026)",
+            "",
+            "SELECT body FROM notes",
+            "ORDER BY body"
+          ],
+          "box": [
+            36,
+            151,
+            488,
+            413
+          ],
+          "kind": "code"
+        },
+        {
+          "label": "VISIBLE ROWS",
+          "rows": [
+            {
+              "text": "A: renew the domain",
+              "state": "good"
+            },
+            {
+              "text": "A: send the invoice",
+              "state": "good"
+            },
+            {
+              "text": "Tenant B rows filtered by RLS",
+              "state": "muted"
+            }
+          ],
+          "box": [
+            576,
+            151,
+            488,
+            413
+          ],
+          "kind": "rows"
+        }
+      ],
+      "arrows": [
+        [
+          524,
+          350,
+          576,
+          350
+        ]
+      ]
+    },
+    {
+      "title": "Switch tenant. The query stays the same.",
+      "blocks": [
+        {
+          "label": "TENANT SCOPE",
+          "rows": [
+            "RunInScope(ctx, tenantB, \u2026)",
+            "",
+            "SELECT body FROM notes",
+            "ORDER BY body"
+          ],
+          "box": [
+            36,
+            151,
+            488,
+            413
+          ],
+          "kind": "code"
+        },
+        {
+          "label": "VISIBLE ROWS",
+          "rows": [
+            {
+              "text": "B: book the venue",
+              "state": "good"
+            },
+            {
+              "text": "B: order the badges",
+              "state": "good"
+            },
+            {
+              "text": "Tenant A rows filtered by RLS",
+              "state": "muted"
+            }
+          ],
+          "box": [
+            576,
+            151,
+            488,
+            413
+          ],
+          "kind": "rows"
+        }
+      ],
+      "arrows": [
+        [
+          524,
+          350,
+          576,
+          350
+        ]
+      ]
+    },
+    {
+      "title": "Outside a scope, fail visibly.",
+      "blocks": [
+        {
+          "label": "DAO CALL",
+          "rows": [
+            "tenantdb.DB(ctx, db)",
+            "",
+            "No tenant scope in ctx"
+          ],
+          "box": [
+            36,
+            151,
+            488,
+            413
+          ],
+          "kind": "code"
+        },
+        {
+          "label": "RESULT",
+          "rows": [
+            {
+              "text": "ErrNoScope",
+              "state": "bad"
+            },
+            "tenantdb: no scope in context",
+            "No query reaches Postgres"
+          ],
+          "box": [
+            576,
+            151,
+            488,
+            413
+          ],
+          "kind": "rows"
+        }
+      ],
+      "arrows": [
+        [
+          524,
+          350,
+          576,
+          350
+        ]
+      ]
+    }
+  ],
+  "name": "pgtenant",
+  "output": "demo.gif"
+}

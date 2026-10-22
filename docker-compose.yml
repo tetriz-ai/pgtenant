@@ -1,0 +1,15 @@
+# Postgres for the tests and examples. Works with `docker compose up -d` and
+# `podman-compose up -d`. It listens on 127.0.0.1:5433 only.
+services:
+  postgres:
+    image: docker.io/library/postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "127.0.0.1:5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 3s
+      retries: 30

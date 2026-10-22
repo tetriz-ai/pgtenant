@@ -1,0 +1,24 @@
+// Copyright 2026 The pgtenant Authors
+// SPDX-License-Identifier: MIT
+
+syntax = "proto3";
+
+package pgtenant.v1;
+
+import "google/protobuf/descriptor.proto";
+
+option go_package = "github.com/tetriz-ai/pgtenant/gen/pgtenant/v1;pgtenantv1";
+
+// TenantScope declares how an RPC handles tenant isolation.
+// The tenant-scope interceptor reads it to decide which transaction the RPC runs in.
+enum TenantScope {
+  TENANT_SCOPE_ENFORCED = 0; // The zero value: org_id from context -> SET LOCAL
+  TENANT_SCOPE_SYSTEM = 1; // Cross-tenant: SET LOCAL = '__system__'
+  TENANT_SCOPE_CALLER_MANAGED = 2; // Interceptor sets org_id in context only, no transaction
+}
+
+extend google.protobuf.MethodOptions {
+  // Tenant isolation scope for this RPC. An RPC without it passes through the
+  // interceptor untouched.
+  TenantScope tenant_scope = 2800106;
+}

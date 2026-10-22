@@ -1,0 +1,80 @@
+// Copyright 2026 The pgtenant Authors
+// SPDX-License-Identifier: MIT
+
+syntax = "proto3";
+
+// Package pgtenant.example.v1 is a small service used by the tests and the
+// gRPC example to show each tenant scope.
+package pgtenant.example.v1;
+
+import "pgtenant/v1/tenant_scope.proto";
+
+option go_package = "github.com/tetriz-ai/pgtenant/gen/pgtenant/example/v1;examplev1";
+
+// NoteService stores short notes per tenant.
+service NoteService {
+  // ListNotes returns the calling tenant's notes.
+  rpc ListNotes(ListNotesRequest) returns (ListNotesResponse) {
+    option (pgtenant.v1.tenant_scope) = TENANT_SCOPE_ENFORCED;
+  }
+  // CountAllNotes counts notes across every tenant.
+  rpc CountAllNotes(CountAllNotesRequest) returns (CountAllNotesResponse) {
+    option (pgtenant.v1.tenant_scope) = TENANT_SCOPE_SYSTEM;
+  }
+  // AddNote writes one note in a transaction the handler opens itself.
+  rpc AddNote(AddNoteRequest) returns (AddNoteResponse) {
+    option (pgtenant.v1.tenant_scope) = TENANT_SCOPE_CALLER_MANAGED;
+  }
+  // Ping carries no tenant scope.
+  rpc Ping(PingRequest) returns (PingResponse);
+  // UnscopedPing carries another method option but no tenant scope.
+  rpc UnscopedPing(UnscopedPingRequest) returns (UnscopedPingResponse) {
+    option deprecated = true;
+  }
+}
+
+// Note is one tenant's note.
+message Note {
+  string id = 1;
+  string organization_id = 2;
+  string body = 3;
+}
+
+// ListNotesRequest has no fields; the tenant comes from the call's context.
+message ListNotesRequest {}
+
+// ListNotesResponse holds the tenant's notes.
+message ListNotesResponse {
+  repeated Note notes = 1;
+}
+
+// CountAllNotesRequest has no fields.
+message CountAllNotesRequest {}
+
+// CountAllNotesResponse holds the count across every tenant.
+message CountAllNotesResponse {
+  int64 count = 1;
+}
+
+// AddNoteRequest names its tenant in the request.
+message AddNoteRequest {
+  string organization_id = 1;
+  string body = 2;
+}
+
+// AddNoteResponse returns the stored note.
+message AddNoteResponse {
+  Note note = 1;
+}
+
+// PingRequest has no fields.
+message PingRequest {}
+
+// PingResponse has no fields.
+message PingResponse {}
+
+// UnscopedPingRequest has no fields.
+message UnscopedPingRequest {}
+
+// UnscopedPingResponse has no fields.
+message UnscopedPingResponse {}

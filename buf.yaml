@@ -1,0 +1,12 @@
+version: v2
+modules:
+  - path: proto
+lint:
+  use:
+    - STANDARD
+  except:
+    # The zero value is TENANT_SCOPE_ENFORCED so an unset option is safe by default.
+    - ENUM_ZERO_VALUE_SUFFIX
+breaking:
+  use:
+    - FILE

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose up -d)",
+      "Bash(podman-compose up -d)",
+      "Bash(go build ./...)",
+      "Bash(go vet ./...)",
+      "Bash(PGTENANT_REQUIRE_TEST_DB=1 go test -race -count=1 ./...)",
+      "Bash(GOTOOLCHAIN=go1.26.0 golangci-lint run)",
+      "Bash(scripts/run-examples.sh)",
+      "Bash(buf lint)",
+      "Bash(buf generate)",
+      "Bash(GOTOOLCHAIN=go1.27.3 go run golang.org/x/vuln/cmd/govulncheck@v1.8.0 ./...)"
+    ]
+  }
+}

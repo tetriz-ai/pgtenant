@@ -1,0 +1,16 @@
+Captured locally on 2026-10-20. Reproduce it with the commands below.
+
+Reproduction commands (repository root):
+PGTENANT_TEST_PORT=15439 go run .github/assets/demo/capture.go
+# Disposable Postgres 17 with the documented example credentials.
+
+Observed output:
+A: A: renew the domain | A: send the invoice
+B: B: book the venue | B: order the badges
+outside scope: tenantdb: no scope in context
+ok   dao-scope
+ok   grpc-service
+ok   http-handler
+ok   isolation-test
+ok   own-db
+ok   read-own-rows

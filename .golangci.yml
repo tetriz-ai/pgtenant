@@ -1,0 +1,12 @@
+version: "2"
+
+linters:
+  # The standard set (errcheck, govet, ineffassign, staticcheck, unused) plus:
+  enable:
+    - misspell
+    - revive
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
